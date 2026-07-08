@@ -37,6 +37,8 @@
                                 <option value="weighted">Weighted Allocation</option>
                                 <option value="priority">Priority Allocation</option>
                                 <option value="minimum">Minimum Guarantee</option>
+                                <option value="user_based">User-Based Allocation</option>
+                                <option value="hybrid">Hybrid Allocation</option>
                             </select>
                         </div>
                     </div>
@@ -145,7 +147,7 @@
             <div class="modal-body">
                 <h6 class="fw-bold text-dark mb-2">Deskripsi:</h6>
                 <p class="text-muted mb-4" id="modal-strategy-description"></p>
-                
+
                 <h6 class="fw-bold text-dark mb-2">Instruksi Penggunaan:</h6>
                 <ol class="ps-3 text-muted mb-0" id="modal-strategy-instructions">
                     <!-- Dynamic Instructions list -->
@@ -161,120 +163,139 @@
 
 <?= $this->section('scripts') ?>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const strategySelect = document.getElementById('strategy');
-    const btnStrategyInfo = document.getElementById('btn-strategy-info');
-    const targetsTbody = document.getElementById('targets-tbody');
-    const btnAddTarget = document.getElementById('btn-add-target');
-    const dynamicHeader = document.getElementById('dynamic-header');
-    const plannerForm = document.getElementById('planner-form');
-    const formErrorAlert = document.getElementById('form-error-alert');
-    const errorMessage = document.getElementById('error-message');
-    const resultsPlaceholder = document.getElementById('results-placeholder');
-    const resultsPanel = document.getElementById('results-panel');
-    const resultsTbody = document.getElementById('results-tbody');
-    
-    let strategiesConfig = {};
-    let chartInstance = null;
+    document.addEventListener('DOMContentLoaded', function() {
+        const strategySelect = document.getElementById('strategy');
+        const btnStrategyInfo = document.getElementById('btn-strategy-info');
+        const targetsTbody = document.getElementById('targets-tbody');
+        const btnAddTarget = document.getElementById('btn-add-target');
+        const dynamicHeader = document.getElementById('dynamic-header');
+        const plannerForm = document.getElementById('planner-form');
+        const formErrorAlert = document.getElementById('form-error-alert');
+        const errorMessage = document.getElementById('error-message');
+        const resultsPlaceholder = document.getElementById('results-placeholder');
+        const resultsPanel = document.getElementById('results-panel');
+        const resultsTbody = document.getElementById('results-tbody');
 
-    // Show strategy info modal
-    btnStrategyInfo.addEventListener('click', function () {
-        const strategy = strategySelect.value;
-        const config = strategiesConfig[strategy];
-        if (!config) return;
+        let strategiesConfig = {};
+        let chartInstance = null;
 
-        document.getElementById('modal-strategy-name').textContent = config.name;
-        document.getElementById('modal-strategy-description').textContent = config.description || 'No description available.';
-        
-        const instructionsList = document.getElementById('modal-strategy-instructions');
-        instructionsList.innerHTML = '';
-        
-        if (config.instruction && Array.isArray(config.instruction)) {
-            config.instruction.forEach(inst => {
-                const li = document.createElement('li');
-                li.className = 'mb-1';
-                li.textContent = inst;
-                instructionsList.appendChild(li);
-            });
-        } else {
-            instructionsList.innerHTML = '<li>No instructions available.</li>';
-        }
+        // Show strategy info modal
+        btnStrategyInfo.addEventListener('click', function() {
+            const strategy = strategySelect.value;
+            const config = strategiesConfig[strategy];
+            if (!config) return;
 
-        const modal = new bootstrap.Modal(document.getElementById('strategyInfoModal'));
-        modal.show();
-    });
+            document.getElementById('modal-strategy-name').textContent = config.name;
+            document.getElementById('modal-strategy-description').textContent = config.description || 'No description available.';
 
-    // Default target suggestions
-    const initialTargets = ['VLAN 10 - Management', 'VLAN 20 - Staff', 'VLAN 30 - Guest'];
+            const instructionsList = document.getElementById('modal-strategy-instructions');
+            instructionsList.innerHTML = '';
 
-    // Load strategies definition
-    fetch('<?= base_url('api/planner/strategies') ?>')
-        .then(res => res.json())
-        .then(data => {
-            strategiesConfig = data;
-            // Initialize with default targets
-            initialTargets.forEach(name => addTargetRow(name));
-            updateDynamicFields();
-        })
-        .catch(err => console.error("Error loading strategies configurations", err));
-
-    strategySelect.addEventListener('change', updateDynamicFields);
-    btnAddTarget.addEventListener('click', () => addTargetRow());
-
-    function updateDynamicFields() {
-        const strategy = strategySelect.value;
-        const config = strategiesConfig[strategy] || { fields: [] };
-        
-        if (config.fields.length > 0) {
-            dynamicHeader.textContent = config.fields[0].label;
-            dynamicHeader.classList.remove('d-none');
-        } else {
-            dynamicHeader.classList.add('d-none');
-        }
-
-        // Update each row's parameter input cell
-        const rows = targetsTbody.querySelectorAll('tr');
-        rows.forEach(row => {
-            const paramCell = row.querySelector('.param-cell');
-            if (config.fields.length > 0) {
-                paramCell.classList.remove('d-none');
-                const field = config.fields[0];
-                const inputHtml = renderField(field, row.dataset.id);
-                paramCell.innerHTML = inputHtml;
+            if (config.instruction && Array.isArray(config.instruction)) {
+                config.instruction.forEach(inst => {
+                    const li = document.createElement('li');
+                    li.className = 'mb-1';
+                    li.textContent = inst;
+                    instructionsList.appendChild(li);
+                });
             } else {
-                paramCell.classList.add('d-none');
-                paramCell.innerHTML = '';
+                instructionsList.innerHTML = '<li>No instructions available.</li>';
             }
-        });
-    }
 
-    function renderField(field, rowId) {
-        if (field.type === 'select') {
-            let options = '';
-            for (const [val, label] of Object.entries(field.options)) {
-                const selected = val === field.default ? 'selected' : '';
-                options += `<option value="${val}" ${selected}>${label}</option>`;
+            const modal = new bootstrap.Modal(document.getElementById('strategyInfoModal'));
+            modal.show();
+        });
+
+        // Default target suggestions
+        const initialTargets = ['VLAN 10 - Management', 'VLAN 20 - Staff', 'VLAN 30 - Guest'];
+
+        // Load strategies definition
+        fetch('<?= base_url('api/planner/strategies') ?>')
+            .then(res => res.json())
+            .then(data => {
+                strategiesConfig = data;
+                // Initialize with default targets
+                initialTargets.forEach(name => addTargetRow(name));
+                updateDynamicFields();
+            })
+            .catch(err => console.error("Error loading strategies configurations", err));
+
+        strategySelect.addEventListener('change', updateDynamicFields);
+        btnAddTarget.addEventListener('click', () => addTargetRow());
+
+        function updateDynamicFields() {
+            const strategy = strategySelect.value;
+            const config = strategiesConfig[strategy] || {
+                fields: []
+            };
+
+            if (config.fields.length > 0) {
+                if (config.fields.length === 1) {
+                    dynamicHeader.textContent = config.fields[0].label;
+                } else {
+                    dynamicHeader.textContent = 'Parameters';
+                }
+                dynamicHeader.classList.remove('d-none');
+            } else {
+                dynamicHeader.classList.add('d-none');
             }
-            return `<select class="form-select param-input" data-name="${field.name}" required>${options}</select>`;
-        } else if (field.type === 'number') {
-            return `<input type="number" class="form-control param-input" data-name="${field.name}" 
+
+            // Update each row's parameter input cell
+            const rows = targetsTbody.querySelectorAll('tr');
+            rows.forEach(row => {
+                const paramCell = row.querySelector('.param-cell');
+                if (config.fields.length > 0) {
+                    paramCell.classList.remove('d-none');
+                    let inputsHtml = '<div class="d-flex flex-column gap-2">';
+                    config.fields.forEach(field => {
+                        inputsHtml += renderField(field, row.dataset.id, config.fields.length > 1);
+                    });
+                    inputsHtml += '</div>';
+                    paramCell.innerHTML = inputsHtml;
+                } else {
+                    paramCell.classList.add('d-none');
+                    paramCell.innerHTML = '';
+                }
+            });
+        }
+
+        function renderField(field, rowId, showLabel = false) {
+            let inputHtml = '';
+            if (field.type === 'select') {
+                let options = '';
+                for (const [val, label] of Object.entries(field.options)) {
+                    const selected = val === field.default ? 'selected' : '';
+                    options += `<option value="${val}" ${selected}>${label}</option>`;
+                }
+                inputHtml = `<select class="form-select form-select-sm param-input" data-name="${field.name}" required>${options}</select>`;
+            } else if (field.type === 'number') {
+                inputHtml = `<input type="number" class="form-control form-control-sm param-input" data-name="${field.name}" 
                            min="${field.min !== undefined ? field.min : ''}" 
                            step="${field.step !== undefined ? field.step : 'any'}"
                            value="${field.default}" placeholder="${field.placeholder || ''}" required>`;
+            }
+
+            if (showLabel && inputHtml) {
+                return `<div class="input-group input-group-sm">
+                <span class="input-group-text" style="min-width: 115px; font-size: 0.75rem; padding: 0.25rem 0.5rem;">${field.label}</span>
+                ${inputHtml}
+            </div>`;
+            }
+            return inputHtml;
         }
-        return '';
-    }
 
-    function addTargetRow(name = '') {
-        const rowId = 'row-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
-        const tr = document.createElement('tr');
-        tr.dataset.id = rowId;
+        function addTargetRow(name = '') {
+            const rowId = 'row-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+            const tr = document.createElement('tr');
+            tr.dataset.id = rowId;
 
-        const strategy = strategySelect.value;
-        const config = strategiesConfig[strategy] || { fields: [] };
-        const hasFields = config.fields.length > 0;
+            const strategy = strategySelect.value;
+            const config = strategiesConfig[strategy] || {
+                fields: []
+            };
+            const hasFields = config.fields.length > 0;
 
-        tr.innerHTML = `
+            tr.innerHTML = `
             <td>
                 <input type="text" class="form-control target-name" value="${name}" placeholder="e.g. VLAN 10, Division A" required>
             </td>
@@ -288,178 +309,199 @@ document.addEventListener('DOMContentLoaded', function () {
             </td>
         `;
 
-        // Event listener for delete button
-        tr.querySelector('.btn-delete-row').addEventListener('click', function () {
-            tr.remove();
-        });
+            // Event listener for delete button
+            tr.querySelector('.btn-delete-row').addEventListener('click', function() {
+                tr.remove();
+            });
 
-        targetsTbody.appendChild(tr);
+            targetsTbody.appendChild(tr);
 
-        // Render dynamic field if active
-        if (hasFields) {
-            const paramCell = tr.querySelector('.param-cell');
-            const field = config.fields[0];
-            paramCell.innerHTML = renderField(field, rowId);
-        }
-    }
-
-    plannerForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        formErrorAlert.classList.add('d-none');
-
-        // Form Validation Check
-        if (!plannerForm.checkValidity()) {
-            plannerForm.classList.add('was-validated');
-            return;
+            // Render dynamic field if active
+            if (hasFields) {
+                const paramCell = tr.querySelector('.param-cell');
+                let inputsHtml = '<div class="d-flex flex-column gap-2">';
+                config.fields.forEach(field => {
+                    inputsHtml += renderField(field, rowId, config.fields.length > 1);
+                });
+                inputsHtml += '</div>';
+                paramCell.innerHTML = inputsHtml;
+            }
         }
 
-        const totalBandwidth = parseFloat(document.getElementById('total_bandwidth').value);
-        const unit = document.getElementById('unit').value;
-        const strategy = strategySelect.value;
+        plannerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            formErrorAlert.classList.add('d-none');
 
-        // Build targets array
-        const targets = [];
-        const rows = targetsTbody.querySelectorAll('tr');
-        if (rows.length === 0) {
-            showError('Please add at least one target.');
-            return;
-        }
-
-        for (const row of rows) {
-            const name = row.querySelector('.target-name').value.trim();
-            if (!name) {
-                showError('All targets must have a name.');
+            // Form Validation Check
+            if (!plannerForm.checkValidity()) {
+                plannerForm.classList.add('was-validated');
                 return;
             }
 
-            const targetObj = { name: name };
+            const totalBandwidth = parseFloat(document.getElementById('total_bandwidth').value);
+            const unit = document.getElementById('unit').value;
+            const strategy = strategySelect.value;
 
-            const paramInput = row.querySelector('.param-input');
-            if (paramInput) {
-                const paramName = paramInput.dataset.name;
-                targetObj[paramName] = paramInput.value;
-            }
-
-            targets.push(targetObj);
-        }
-
-        const payload = {
-            total_bandwidth: totalBandwidth,
-            unit: unit,
-            strategy: strategy,
-            targets: targets
-        };
-
-        // Submit AJAX request
-        fetch('<?= base_url('api/planner/calculate') ?>', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json().then(data => ({ status: res.status, body: data })))
-        .then(res => {
-            if (res.status !== 200) {
-                showError(res.body.messages?.error || res.body.message || 'Validation or computation failed.');
+            // Build targets array
+            const targets = [];
+            const rows = targetsTbody.querySelectorAll('tr');
+            if (rows.length === 0) {
+                showError('Please add at least one target.');
                 return;
             }
-            renderResults(res.body);
-        })
-        .catch(err => {
-            showError('Server/network connection error.');
-            console.error(err);
+
+            for (const row of rows) {
+                const name = row.querySelector('.target-name').value.trim();
+                if (!name) {
+                    showError('All targets must have a name.');
+                    return;
+                }
+
+                const targetObj = {
+                    name: name
+                };
+
+                const paramInputs = row.querySelectorAll('.param-input');
+                paramInputs.forEach(input => {
+                    const paramName = input.dataset.name;
+                    targetObj[paramName] = input.value;
+                });
+
+                targets.push(targetObj);
+            }
+
+            const payload = {
+                total_bandwidth: totalBandwidth,
+                unit: unit,
+                strategy: strategy,
+                targets: targets
+            };
+
+            // Submit AJAX request
+            fetch('<?= base_url('api/planner/calculate') ?>', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(res => res.json().then(data => ({
+                    status: res.status,
+                    body: data
+                })))
+                .then(res => {
+                    if (res.status !== 200) {
+                        showError(res.body.messages?.error || res.body.message || 'Validation or computation failed.');
+                        return;
+                    }
+                    renderResults(res.body);
+                })
+                .catch(err => {
+                    showError('Server/network connection error.');
+                    console.error(err);
+                });
         });
-    });
 
-    function showError(msg) {
-        errorMessage.textContent = msg;
-        formErrorAlert.classList.remove('d-none');
-        resultsPanel.classList.add('d-none');
-        resultsPlaceholder.classList.remove('d-none');
-    }
+        function showError(msg) {
+            errorMessage.textContent = msg;
+            formErrorAlert.classList.remove('d-none');
+            resultsPanel.classList.add('d-none');
+            resultsPlaceholder.classList.remove('d-none');
+        }
 
-    function renderResults(data) {
-        resultsPlaceholder.classList.add('d-none');
-        resultsPanel.classList.remove('d-none');
+        // Mencegah serangan XSS (Cross-Site Scripting) dengan melakukan sanitasi karakter HTML khusus.
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
 
-        // Update Summary Metrics
-        document.getElementById('summary-capacity').textContent = `Capacity: ${data.total_bandwidth} ${data.unit}`;
-        document.getElementById('summary-strategy').textContent = `Strategy: ${strategySelect.options[strategySelect.selectedIndex].text}`;
-        document.getElementById('summary-targets').textContent = `Targets: ${data.allocations.length}`;
+        // Render hasil kalkulasi ke dalam tabel HTML dan inisialisasi visualisasi grafik.
+        function renderResults(data) {
+            resultsPlaceholder.classList.add('d-none');
+            resultsPanel.classList.remove('d-none');
 
-        // Populate Table Rows
-        resultsTbody.innerHTML = '';
-        let totalAllocated = 0;
-        const labels = [];
-        const values = [];
+            // Update Summary Metrics
+            document.getElementById('summary-capacity').textContent = `Capacity: ${data.total_bandwidth} ${data.unit}`;
+            document.getElementById('summary-strategy').textContent = `Strategy: ${strategySelect.options[strategySelect.selectedIndex].text}`;
+            document.getElementById('summary-targets').textContent = `Targets: ${data.allocations.length}`;
 
-        data.allocations.forEach(item => {
-            totalAllocated += item.allocated;
-            labels.push(item.name);
-            values.push(item.allocated);
+            // Populate Table Rows
+            resultsTbody.innerHTML = '';
+            let totalAllocated = 0;
+            const labels = [];
+            const values = [];
 
-            const percentage = ((item.allocated / data.total_bandwidth) * 100).toFixed(1);
+            data.allocations.forEach(item => {
+                totalAllocated += item.allocated;
+                labels.push(item.name);
+                values.push(item.allocated);
 
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
+                const percentage = ((item.allocated / data.total_bandwidth) * 100).toFixed(1);
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
                 <td>
-                    <div class="fw-semibold text-dark">${item.name}</div>
-                    <small class="text-muted">${item.details || ''}</small>
+                    <div class="fw-semibold text-dark">${escapeHTML(item.name)}</div>
+                    <small class="text-muted">${escapeHTML(item.details || '')}</small>
                 </td>
                 <td class="text-end fw-bold text-primary">${item.allocated} ${data.unit}</td>
                 <td class="text-end">${percentage}%</td>
             `;
-            resultsTbody.appendChild(tr);
-        });
+                resultsTbody.appendChild(tr);
+            });
 
-        document.getElementById('results-total-allocated').textContent = `${totalAllocated.toFixed(2)} ${data.unit}`;
+            document.getElementById('results-total-allocated').textContent = `${totalAllocated.toFixed(2)} ${data.unit}`;
 
-        // Color Palette for Chart
-        const palette = [
-            '#607456', // Primary
-            '#BA6A4C', // Accent
-            '#7B2525', // Danger
-            '#e1b12c', // Gold
-            '#44bd32', // Green
-            '#0097e6', // Blue
-            '#8c7ae6', // Purple
-            '#353b48'  // Dark Gray
-        ];
+            // Palette warna modern untuk masing-masing bagian grafik pie chart
+            const palette = [
+                '#607456', // Primary
+                '#BA6A4C', // Accent
+                '#7B2525', // Danger
+                '#e1b12c', // Gold
+                '#44bd32', // Green
+                '#0097e6', // Blue
+                '#8c7ae6', // Purple
+                '#353b48' // Dark Gray
+            ];
 
-        // Draw Pie Chart
-        if (chartInstance) {
-            chartInstance.destroy();
-        }
+            // Inisialisasi atau update grafik visualisasi alokasi bandwidth menggunakan Chart.js
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
 
-        const ctx = document.getElementById('allocation-chart').getContext('2d');
-        chartInstance = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: values,
-                    backgroundColor: palette.slice(0, labels.length)
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 12,
-                            font: {
-                                family: 'Public Sans',
-                                size: 11
+            const ctx = document.getElementById('allocation-chart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: palette.slice(0, labels.length)
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                font: {
+                                    family: 'Public Sans',
+                                    size: 11
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
-    }
-});
+            });
+        }
+    });
 </script>
 <?= $this->endSection() ?>
