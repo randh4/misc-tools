@@ -13,6 +13,7 @@ class BandwidthPlanner extends BaseController
         'weighted' => \App\Services\Allocation\WeightedAllocation::class,
         'priority' => \App\Services\Allocation\PriorityAllocation::class,
         'minimum'  => \App\Services\Allocation\MinimumGuarantee::class,
+        'hybrid'   => \App\Services\Allocation\HybridAllocation::class,
     ];
 
     public function index()

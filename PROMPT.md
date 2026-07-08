@@ -118,6 +118,6 @@ di root project.
 
 # TASK
 
-Buat planning untuk menambahkan fitur pop up informasi untuk masing-masing strategi alokasi sekaligus intruksi singkat tentang cara penggunaan masing-masing strategi alokasi.
+Buat planning untuk manambahkan opsi strategi alokasi yang hybrid. jadi gabungan dari semua strategi yang ada gitu dengan variable-variablenya gitu. memungkinkan kah?
 
 Buat task breakdown yang dapat langsung dikerjakan oleh junior developer.

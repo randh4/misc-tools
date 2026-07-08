@@ -1,70 +1,58 @@
 # 1. Executive Summary
-Penambahan fitur Pop-up Informasi dan Instruksi Penggunaan untuk masing-masing Strategi Alokasi pada Bandwidth Planner. Fitur ini bertujuan memberikan panduan instan kepada pengguna langsung dari antarmuka kalkulator tanpa harus membuka halaman dokumentasi terpisah.
+Penambahan fitur **Hybrid Allocation Strategy** pada Bandwidth Planner. Strategi ini dirancang untuk menyelesaikan skenario dunia nyata yang kompleks dengan menggabungkan variabel Minimum Guarantee, Priority, dan Weight. Secara teknis, pengembangan fitur ini **sangat memungkinkan** dan akan diakomodasi melalui penambahan satu class strategi baru yang menggunakan struktur modular yang sudah ada.
 
 # 2. Current Condition Analysis
-- **Kondisi:** Pengguna memilih strategi dari dropdown tanpa penjelasan mengenai algoritma atau parameter yang dibutuhkan.
-- **Tantangan:** Mengintegrasikan bantuan dinamis sesuai strategi terpilih tanpa mengganggu form layout.
-- **Rekomendasi:** Menggunakan komponen Bootstrap 5 Modal yang dipicu oleh ikon bantuan di samping label "Allocation Strategy", di mana konten modal dirender secara dinamis via JavaScript dari API backend.
+- **Kondisi:** Pengguna hanya dapat menggunakan satu metrik (rata, bobot, prioritas, atau jaminan minimum) pada satu waktu.
+- **Tantangan:** Jika pengguna ingin memberikan minimum bandwidth *dan* membagi sisa bandwidth berdasarkan prioritas divisi, hal tersebut tidak terfasilitasi.
+- **Solusi:** Membuat strategi hibrida yang merender tiga variabel sekaligus pada form target (Min. Alloc, Priority, dan Weight).
 
 # 3. Proposed Solution
-- **UI Element:** Ikon informasi interaktif (`bx-info-circle`) di sebelah dropdown.
-- **Komponen Pop-up:** Menggunakan kerangka statis Bootstrap Modal di frontend.
-- **Data Source:** Backend API `/api/planner/strategies` akan diperbarui untuk mengembalikan data `description` dan `instruction` setiap strategi, agar pengaturan konten terpusat di backend.
-- **Interaksi:** Saat ikon diklik, JS mengambil konten dari state sesuai strategi aktif dan meng-inject-nya ke dalam Modal sebelum menampilkannya.
+- **Mekanisme Kalkulasi Hybrid:**
+  1. **Fase Jaminan:** Seluruh nilai Minimum Allocation diberikan kepada masing-masing target.
+  2. **Kalkulasi Sisa:** Kapasitas sisa = (Total Bandwidth - Total Jaminan).
+  3. **Combined Score:** Setiap target memiliki *Combined Score* hasil dari `Bobot (Weight) x Pengali Prioritas (Critical=4, dst)`.
+  4. **Fase Sisa (Proportional):** Kapasitas sisa dibagikan ke masing-masing target berdasarkan *Combined Score* dibandingkan dengan Total Skor.
+- **Kesimpulan:** Ya, ini memungkinkan karena arsitektur *Service/Strategy Pattern* sudah dipersiapkan untuk dinamisnya array `getFields()` dan algoritma terisolasi pada method `calculate()`.
 
 # 4. Database Impact
 - N/A.
 
 # 5. Backend Impact
-- Modifikasi interface `app/Services/Allocation/StrategyInterface.php`.
-- Penambahan fungsi untuk mendapatkan deskripsi pada setiap class strategi.
-- Modifikasi endpoint `GET /api/planner/strategies` di `app/Controllers/BandwidthPlanner.php` untuk merender field tambahan pada JSON.
+- **Pembuatan File:** `app/Services/Allocation/HybridAllocation.php` (Implementasi `StrategyInterface`).
+- **Registrasi Strategi:** Menambahkan elemen `hybrid` pada array `$strategies` di controller `BandwidthPlanner.php`.
+- **Validasi:** Menggunakan ulang logika pemeriksaan kapasitas limit (sama seperti *Minimum Guarantee*).
 
 # 6. Frontend Impact
-- Penambahan elemen tombol informasi (Tooltip/Icon) pada view `planner/index.php`.
-- Penambahan elemen `<div class="modal">` Bootstrap pada file view yang sama.
-- Modifikasi blok JavaScript di `planner/index.php` untuk menangani event klik dan menginjeksi konten ke modal secara dinamis.
+- **HTML:** Menambah `<option value="hybrid">Hybrid Allocation</option>` di dropdown form.
+- **JavaScript UI:** Saat ini JS di `planner.js` menangkap array `fields` yang isinya hanya 1 index (index [0]). Fungsi `updateDynamicFields()` dan pembacaan target payload harus sedikit dimodifikasi melalui perulangan (looping) agar jika ada lebih dari 1 field (seperti Hybrid yang memiliki 3 field), semuanya dirender secara bersusun (stacked) dengan rapi di dalam satu kolom tabel `param-cell`, serta di-parsing secara utuh saat *submit*.
 
 # 7. API Impact
-- Endpoint: `GET /api/planner/strategies`
-- Perubahan Payload Response JSON (Penambahan Data):
-  ```json
-  {
-    "equal": {
-      "name": "Equal Share",
-      "fields": [...],
-      "description": "Membagi bandwidth secara rata...",
-      "instruction": "Tidak ada input tambahan. Cukup tambahkan nama target."
-    }
-  }
-  ```
+- Response `GET /api/planner/strategies` akan mengembalikan satu objek strategi tambahan (`hybrid`) dengan key `fields` berisi array dari tiga objek parameter input (Number, Select, Number).
 
 # 8. Risk Analysis
-- **Risiko Responsivitas:** Modal terpotong pada device berukuran kecil jika instruksi terlalu panjang.
-  - *Mitigasi:* Penggunaan class `.modal-dialog-scrollable` dan pembatasan panjang kalimat instruksi.
+- **Risiko (UI/UX):** Karena kolom parameter akan diisi oleh 3 input field, tabel target bisa menjadi sangat padat di layar kecil.
+  - *Mitigasi:* Susun elemen input secara vertikal (class `d-flex flex-column gap-2`) di sel tabel tersebut.
+- **Risiko Matematis:** Pembagian nilai dengan pembulatan berpotensi menyisakan (hilang) fraksi 0.01 bandwidth.
+  - *Mitigasi:* Terapkan metode pembulatan standar (`round(..., 2)`) dan tidak menuntut presisi mutlak hingga 10 desimal (sudah mencukupi untuk MVP).
 
 # 9. Task Breakdown
-- **Phase 1: Modifikasi Backend (Allocation Engine & API)**
-  - [ ] Update `StrategyInterface.php`: Tambahkan deklarasi method `getDescription(): string` dan `getInstruction(): array`.
-  - [ ] Implementasikan method baru tersebut pada class `EqualShare`, `WeightedAllocation`, `PriorityAllocation`, dan `MinimumGuarantee`.
-  - [ ] Update `BandwidthPlanner::strategies()`: Panggil method tersebut dan sisipkan `description` dan `instruction` pada output array JSON.
-- **Phase 2: Update UI Form & Modal (Frontend)**
-  - [ ] Edit `app/Views/planner/index.php`: Tambahkan elemen `<i id="btn-strategy-info" class="bx bx-info-circle text-primary ms-2 cursor-pointer"></i>` di sebelah label Allocation Strategy.
-  - [ ] Tambahkan elemen HTML Bootstrap Modal kosong dengan ID `strategyInfoModal` (terdiri dari HeaderTitle, BodyDescription, BodyInstructionList) di bagian bawah form.
-- **Phase 3: JavaScript Integration**
-  - [ ] Modifikasi JavaScript: Pastikan `strategiesConfig` yang diambil dari endpoint API menyimpan field instruksi terbaru.
-  - [ ] Tambahkan event listener `'click'` pada `btn-strategy-info`.
-  - [ ] Di dalam event listener, inject data dari `strategiesConfig[strategySelect.value]` ke dalam innerHTML modal (Title, Deskripsi, dan list Instruksi).
-  - [ ] Tampilkan modal menggunakan `new bootstrap.Modal(document.getElementById('strategyInfoModal')).show()`.
+- **Phase 1: Backend Implementation**
+  - [ ] Buat class `HybridAllocation.php` dan implementasikan 4 method wajib interface.
+  - [ ] Di dalam `getFields()`, kembalikan array konfigurasi untuk `min_alloc`, `priority`, dan `weight`.
+  - [ ] Di dalam `validate()`, cek limit minimum allocation dan validitas semua data (sama seperti validasi pada ketiga kelas gabungannya).
+  - [ ] Di dalam `calculate()`, lakukan Fase Jaminan kemudian hitung sisa menggunakan *Combined Score* (Weight x PriorityMultiplier).
+  - [ ] Daftarkan class `HybridAllocation` di array `BandwidthPlanner.php`.
+- **Phase 2: Frontend Layout Update**
+  - [ ] Tambahkan opsi `Hybrid Allocation` ke elemen `<select id="strategy">`.
+  - [ ] Modifikasi loop di JS bagian `updateDynamicFields()` agar dapat merender seluruh isi array `config.fields` (tidak hanya index `[0]`) ke dalam div container ber-class `d-flex flex-column gap-2`.
+  - [ ] Pastikan payload `targetObj` menyimpan semua `data-name` dari field yang dirender saat submit.
 
 # 10. Testing Checklist
-- [ ] Ikon info muncul proporsional di sebelah dropdown.
-- [ ] Hover ikon memunculkan kursor pointer.
-- [ ] Klik ikon sukses memunculkan Modal Bootstrap di tengah layar.
-- [ ] Judul dan isi teks dalam Modal berganti sesuai dengan pilihan strategi yang sedang aktif.
-- [ ] Daftar instruksi (array ke list HTML) dirender dengan format yang benar.
-- [ ] Tombol *Close* pada modal dan klik *backdrop* sukses menutup modal.
+- [ ] Opsi Hybrid muncul pada form frontend.
+- [ ] Memilih Hybrid akan menampilkan 3 kolom input secara vertikal di kolom Parameter target.
+- [ ] Hasil kalkulasi memberikan Minimum Allocation ke setiap target, lalu membagi sisanya sesuai proporsi skor.
+- [ ] Menginput total Minimum Allocation yang melebihi Total Bandwidth menolak kalkulasi dan menampilkan alert error.
+- [ ] Pop-up modal info menampilkan deskripsi/instruksi khusus Hybrid.
 
 # 11. Deployment Checklist
-- [ ] Pastikan script JS terbaru dimuat ulang (clear browser cache jika perlu).
-- [ ] Verifikasi endpoint API mengembalikan key `description` dan `instruction` di environment production.
+- [ ] Cek ulang konsistensi UI di mode mobile saat mode Hybrid dipilih (scroll tabel horizontal dapat digunakan).
