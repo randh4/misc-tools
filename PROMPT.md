@@ -118,6 +118,6 @@ di root project.
 
 # TASK
 
-Buat planning untuk manambahkan opsi strategi alokasi yang hybrid. jadi gabungan dari semua strategi yang ada gitu dengan variable-variablenya gitu. memungkinkan kah?
+Buat planning untuk manambahkan opsi strategi alokasi yang dasarnya dari jumlah user di setiap area tersebut. termasuk untuk hybrid.
 
 Buat task breakdown yang dapat langsung dikerjakan oleh junior developer.
