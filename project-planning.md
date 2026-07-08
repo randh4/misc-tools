@@ -1,58 +1,59 @@
 # 1. Executive Summary
-Penambahan fitur **Hybrid Allocation Strategy** pada Bandwidth Planner. Strategi ini dirancang untuk menyelesaikan skenario dunia nyata yang kompleks dengan menggabungkan variabel Minimum Guarantee, Priority, dan Weight. Secara teknis, pengembangan fitur ini **sangat memungkinkan** dan akan diakomodasi melalui penambahan satu class strategi baru yang menggunakan struktur modular yang sudah ada.
+Penambahan fitur **User-Based Allocation Strategy** dan pembaruan pada **Hybrid Allocation** untuk mengakomodasi alokasi berbasis jumlah pengguna (User Count). Fitur ini bertujuan untuk memberikan opsi pembagian bandwidth yang dinamis dan adil sesuai dengan kepadatan populasi pengguna di setiap area target.
 
 # 2. Current Condition Analysis
-- **Kondisi:** Pengguna hanya dapat menggunakan satu metrik (rata, bobot, prioritas, atau jaminan minimum) pada satu waktu.
-- **Tantangan:** Jika pengguna ingin memberikan minimum bandwidth *dan* membagi sisa bandwidth berdasarkan prioritas divisi, hal tersebut tidak terfasilitasi.
-- **Solusi:** Membuat strategi hibrida yang merender tiga variabel sekaligus pada form target (Min. Alloc, Priority, dan Weight).
+- **Kondisi:** Strategi yang ada belum mempertimbangkan jumlah kepala (user aktif/estimasi pengguna) di dalam suatu jaringan.
+- **Tantangan:** Alokasi untuk area publik (misal: kantin dengan estimasi 100 user) jika disamakan bobotnya dengan ruang server (2 user) melalui *equal share* atau harus menghitung rasio manual melalui *weighted* menjadi kurang intuitif.
+- **Solusi:** 
+  1. Membuat strategi spesifik `UserBasedAllocation`.
+  2. Menyuntikkan metrik `user_count` ke dalam strategi `HybridAllocation` sebagai faktor penentu bobot kalkulasi.
 
 # 3. Proposed Solution
-- **Mekanisme Kalkulasi Hybrid:**
-  1. **Fase Jaminan:** Seluruh nilai Minimum Allocation diberikan kepada masing-masing target.
-  2. **Kalkulasi Sisa:** Kapasitas sisa = (Total Bandwidth - Total Jaminan).
-  3. **Combined Score:** Setiap target memiliki *Combined Score* hasil dari `Bobot (Weight) x Pengali Prioritas (Critical=4, dst)`.
-  4. **Fase Sisa (Proportional):** Kapasitas sisa dibagikan ke masing-masing target berdasarkan *Combined Score* dibandingkan dengan Total Skor.
-- **Kesimpulan:** Ya, ini memungkinkan karena arsitektur *Service/Strategy Pattern* sudah dipersiapkan untuk dinamisnya array `getFields()` dan algoritma terisolasi pada method `calculate()`.
+- **User-Based Allocation:** Memiliki 1 parameter tunggal (`user_count`). Bandwidth dibagi berdasarkan proporsi `(User Count Target / Total Semua User) x Total Bandwidth`.
+- **Pembaruan Hybrid Allocation:** Parameter form Hybrid bertambah menjadi 4 (`min_alloc`, `priority`, `weight`, `user_count`). *Combined Score* pada Hybrid akan menjadi perkalian seluruh faktor: `Priority Multiplier x Weight x User Count`.
 
 # 4. Database Impact
 - N/A.
 
 # 5. Backend Impact
-- **Pembuatan File:** `app/Services/Allocation/HybridAllocation.php` (Implementasi `StrategyInterface`).
-- **Registrasi Strategi:** Menambahkan elemen `hybrid` pada array `$strategies` di controller `BandwidthPlanner.php`.
-- **Validasi:** Menggunakan ulang logika pemeriksaan kapasitas limit (sama seperti *Minimum Guarantee*).
+- **Pembuatan:** File `app/Services/Allocation/UserBasedAllocation.php`.
+- **Modifikasi:** File `app/Services/Allocation/HybridAllocation.php` (penyesuaian array `getFields` dan logika rumus `calculate`).
+- **Registrasi:** Menambahkan `'user_based' => \App\Services\Allocation\UserBasedAllocation::class` di controller `BandwidthPlanner.php`.
 
 # 6. Frontend Impact
-- **HTML:** Menambah `<option value="hybrid">Hybrid Allocation</option>` di dropdown form.
-- **JavaScript UI:** Saat ini JS di `planner.js` menangkap array `fields` yang isinya hanya 1 index (index [0]). Fungsi `updateDynamicFields()` dan pembacaan target payload harus sedikit dimodifikasi melalui perulangan (looping) agar jika ada lebih dari 1 field (seperti Hybrid yang memiliki 3 field), semuanya dirender secara bersusun (stacked) dengan rapi di dalam satu kolom tabel `param-cell`, serta di-parsing secara utuh saat *submit*.
+- Penambahan elemen `<option>` untuk User-Based Allocation di HTML form.
+- Penyesuaian layout tidak signifikan, namun karena Hybrid kini memiliki 4 field form, tabel target secara vertikal akan memanjang. Karena sistem *input-group* sudah diterapkan pada milestone sebelumnya, perulangan (loop) JS otomatis menangani penampilan 4 elemen input dengan rapi.
 
 # 7. API Impact
-- Response `GET /api/planner/strategies` akan mengembalikan satu objek strategi tambahan (`hybrid`) dengan key `fields` berisi array dari tiga objek parameter input (Number, Select, Number).
+- Response endpoint `/api/planner/strategies` akan bertambah 1 objek (`user_based`) dan field milik (`hybrid`) akan disisipkan elemen input form ke-4 yaitu `user_count` dengan tipe number.
 
 # 8. Risk Analysis
-- **Risiko (UI/UX):** Karena kolom parameter akan diisi oleh 3 input field, tabel target bisa menjadi sangat padat di layar kecil.
-  - *Mitigasi:* Susun elemen input secara vertikal (class `d-flex flex-column gap-2`) di sel tabel tersebut.
-- **Risiko Matematis:** Pembagian nilai dengan pembulatan berpotensi menyisakan (hilang) fraksi 0.01 bandwidth.
-  - *Mitigasi:* Terapkan metode pembulatan standar (`round(..., 2)`) dan tidak menuntut presisi mutlak hingga 10 desimal (sudah mencukupi untuk MVP).
+- **Risiko Logika:** User bisa menginput nilai `0` untuk User Count, menyebabkan error division by zero jika total user 0.
+  - *Mitigasi:* Tambahkan validasi backend `totalUserCount > 0` dan syarat field harus diisi angka minimal 1.
+- **Risiko UX (Kepadatan UI):** Menumpuk 4 baris input di dalam sel tabel mungkin membuat baris (row) menjadi sangat tinggi.
+  - *Mitigasi:* Jika memungkinkan di masa depan, pisahkan parameter form dari bentuk tabel, namun untuk sekarang, susunan vertikal `flex-column` sudah mencukupi dan bisa di-scroll.
 
 # 9. Task Breakdown
-- **Phase 1: Backend Implementation**
-  - [ ] Buat class `HybridAllocation.php` dan implementasikan 4 method wajib interface.
-  - [ ] Di dalam `getFields()`, kembalikan array konfigurasi untuk `min_alloc`, `priority`, dan `weight`.
-  - [ ] Di dalam `validate()`, cek limit minimum allocation dan validitas semua data (sama seperti validasi pada ketiga kelas gabungannya).
-  - [ ] Di dalam `calculate()`, lakukan Fase Jaminan kemudian hitung sisa menggunakan *Combined Score* (Weight x PriorityMultiplier).
-  - [ ] Daftarkan class `HybridAllocation` di array `BandwidthPlanner.php`.
-- **Phase 2: Frontend Layout Update**
-  - [ ] Tambahkan opsi `Hybrid Allocation` ke elemen `<select id="strategy">`.
-  - [ ] Modifikasi loop di JS bagian `updateDynamicFields()` agar dapat merender seluruh isi array `config.fields` (tidak hanya index `[0]`) ke dalam div container ber-class `d-flex flex-column gap-2`.
-  - [ ] Pastikan payload `targetObj` menyimpan semua `data-name` dari field yang dirender saat submit.
+- **Phase 1: Backend User-Based Strategy**
+  - [ ] Buat file `UserBasedAllocation.php` yang implement `StrategyInterface`.
+  - [ ] Buat fungsi `getFields()` mengembalikan array config untuk 1 field `user_count` (min: 1).
+  - [ ] Tulis logika `calculate()` yang membagi total bandwidth secara persentase berdasarkan jumlah user per baris target.
+  - [ ] Registrasi class ke dalam array controller `BandwidthPlanner`.
+- **Phase 2: Backend Hybrid Update**
+  - [ ] Buka `HybridAllocation.php`.
+  - [ ] Sisipkan field config `user_count` di `getFields()`.
+  - [ ] Ubah blok kode perhitungan *Combined Score* pada `calculate()` agar mencakup perkalian dengan `user_count`.
+  - [ ] Update validasi `validate()` pada kedua kelas tersebut.
+  - [ ] Update text deskripsi dan instruksi agar mencerminkan fungsionalitas `user_count`.
+- **Phase 3: Frontend Update**
+  - [ ] Buka `app/Views/planner/index.php`.
+  - [ ] Tambahkan tag `<option value="user_based">User-Based Allocation</option>` di dropdown `<select id="strategy">`.
 
 # 10. Testing Checklist
-- [ ] Opsi Hybrid muncul pada form frontend.
-- [ ] Memilih Hybrid akan menampilkan 3 kolom input secara vertikal di kolom Parameter target.
-- [ ] Hasil kalkulasi memberikan Minimum Allocation ke setiap target, lalu membagi sisanya sesuai proporsi skor.
-- [ ] Menginput total Minimum Allocation yang melebihi Total Bandwidth menolak kalkulasi dan menampilkan alert error.
-- [ ] Pop-up modal info menampilkan deskripsi/instruksi khusus Hybrid.
+- [ ] Tombol opsi User-Based muncul pada UI.
+- [ ] Jika User-Based dipilih, field `User Count` muncul dan kalkulasi berjalan proporsional 100% tepat.
+- [ ] Jika Hybrid dipilih, field ke-4 (`User Count`) muncul dan berfungsi memperbesar persentase perolehan (Multiplier) bagi target dengan user terbanyak setelah jaminan Minimum terpenuhi.
+- [ ] Validasi error berfungsi jika user menginput nilai User Count `0` atau minus.
 
 # 11. Deployment Checklist
-- [ ] Cek ulang konsistensi UI di mode mobile saat mode Hybrid dipilih (scroll tabel horizontal dapat digunakan).
+- [ ] Clear browser cache/hard reload memastikan DOM HTML terbaru ditarik.

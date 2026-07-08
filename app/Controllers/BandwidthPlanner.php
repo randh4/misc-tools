@@ -9,11 +9,12 @@ class BandwidthPlanner extends BaseController
     use ResponseTrait;
 
     private array $strategies = [
-        'equal'    => \App\Services\Allocation\EqualShare::class,
-        'weighted' => \App\Services\Allocation\WeightedAllocation::class,
-        'priority' => \App\Services\Allocation\PriorityAllocation::class,
-        'minimum'  => \App\Services\Allocation\MinimumGuarantee::class,
-        'hybrid'   => \App\Services\Allocation\HybridAllocation::class,
+        'equal'      => \App\Services\Allocation\EqualShare::class,
+        'weighted'   => \App\Services\Allocation\WeightedAllocation::class,
+        'priority'   => \App\Services\Allocation\PriorityAllocation::class,
+        'minimum'    => \App\Services\Allocation\MinimumGuarantee::class,
+        'hybrid'     => \App\Services\Allocation\HybridAllocation::class,
+        'user_based' => \App\Services\Allocation\UserBasedAllocation::class,
     ];
 
     public function index()
