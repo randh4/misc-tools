@@ -37,6 +37,7 @@
                                 <option value="weighted">Weighted Allocation</option>
                                 <option value="priority">Priority Allocation</option>
                                 <option value="minimum">Minimum Guarantee</option>
+                                <option value="hybrid">Hybrid Allocation</option>
                             </select>
                         </div>
                     </div>
@@ -226,7 +227,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const config = strategiesConfig[strategy] || { fields: [] };
         
         if (config.fields.length > 0) {
-            dynamicHeader.textContent = config.fields[0].label;
+            if (config.fields.length === 1) {
+                dynamicHeader.textContent = config.fields[0].label;
+            } else {
+                dynamicHeader.textContent = 'Parameters';
+            }
             dynamicHeader.classList.remove('d-none');
         } else {
             dynamicHeader.classList.add('d-none');
@@ -238,9 +243,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const paramCell = row.querySelector('.param-cell');
             if (config.fields.length > 0) {
                 paramCell.classList.remove('d-none');
-                const field = config.fields[0];
-                const inputHtml = renderField(field, row.dataset.id);
-                paramCell.innerHTML = inputHtml;
+                let inputsHtml = '<div class="d-flex flex-column gap-2">';
+                config.fields.forEach(field => {
+                    inputsHtml += renderField(field, row.dataset.id, config.fields.length > 1);
+                });
+                inputsHtml += '</div>';
+                paramCell.innerHTML = inputsHtml;
             } else {
                 paramCell.classList.add('d-none');
                 paramCell.innerHTML = '';
@@ -248,21 +256,29 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function renderField(field, rowId) {
+    function renderField(field, rowId, showLabel = false) {
+        let inputHtml = '';
         if (field.type === 'select') {
             let options = '';
             for (const [val, label] of Object.entries(field.options)) {
                 const selected = val === field.default ? 'selected' : '';
                 options += `<option value="${val}" ${selected}>${label}</option>`;
             }
-            return `<select class="form-select param-input" data-name="${field.name}" required>${options}</select>`;
+            inputHtml = `<select class="form-select form-select-sm param-input" data-name="${field.name}" required>${options}</select>`;
         } else if (field.type === 'number') {
-            return `<input type="number" class="form-control param-input" data-name="${field.name}" 
+            inputHtml = `<input type="number" class="form-control form-control-sm param-input" data-name="${field.name}" 
                            min="${field.min !== undefined ? field.min : ''}" 
                            step="${field.step !== undefined ? field.step : 'any'}"
                            value="${field.default}" placeholder="${field.placeholder || ''}" required>`;
         }
-        return '';
+
+        if (showLabel && inputHtml) {
+            return `<div class="input-group input-group-sm">
+                <span class="input-group-text" style="min-width: 115px; font-size: 0.75rem; padding: 0.25rem 0.5rem;">${field.label}</span>
+                ${inputHtml}
+            </div>`;
+        }
+        return inputHtml;
     }
 
     function addTargetRow(name = '') {
@@ -298,8 +314,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // Render dynamic field if active
         if (hasFields) {
             const paramCell = tr.querySelector('.param-cell');
-            const field = config.fields[0];
-            paramCell.innerHTML = renderField(field, rowId);
+            let inputsHtml = '<div class="d-flex flex-column gap-2">';
+            config.fields.forEach(field => {
+                inputsHtml += renderField(field, rowId, config.fields.length > 1);
+            });
+            inputsHtml += '</div>';
+            paramCell.innerHTML = inputsHtml;
         }
     }
 
@@ -334,11 +354,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const targetObj = { name: name };
 
-            const paramInput = row.querySelector('.param-input');
-            if (paramInput) {
-                const paramName = paramInput.dataset.name;
-                targetObj[paramName] = paramInput.value;
-            }
+            const paramInputs = row.querySelectorAll('.param-input');
+            paramInputs.forEach(input => {
+                const paramName = input.dataset.name;
+                targetObj[paramName] = input.value;
+            });
 
             targets.push(targetObj);
         }
