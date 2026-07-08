@@ -409,6 +409,7 @@
             resultsPlaceholder.classList.remove('d-none');
         }
 
+        // Mencegah serangan XSS (Cross-Site Scripting) dengan melakukan sanitasi karakter HTML khusus.
         function escapeHTML(str) {
             if (!str) return '';
             return String(str)
@@ -419,6 +420,7 @@
                 .replace(/'/g, '&#39;');
         }
 
+        // Render hasil kalkulasi ke dalam tabel HTML dan inisialisasi visualisasi grafik.
         function renderResults(data) {
             resultsPlaceholder.classList.add('d-none');
             resultsPanel.classList.remove('d-none');
@@ -455,7 +457,7 @@
 
             document.getElementById('results-total-allocated').textContent = `${totalAllocated.toFixed(2)} ${data.unit}`;
 
-            // Color Palette for Chart
+            // Palette warna modern untuk masing-masing bagian grafik pie chart
             const palette = [
                 '#607456', // Primary
                 '#BA6A4C', // Accent
@@ -467,7 +469,7 @@
                 '#353b48' // Dark Gray
             ];
 
-            // Draw Pie Chart
+            // Inisialisasi atau update grafik visualisasi alokasi bandwidth menggunakan Chart.js
             if (chartInstance) {
                 chartInstance.destroy();
             }
