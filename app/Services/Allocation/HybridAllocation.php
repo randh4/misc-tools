@@ -29,7 +29,10 @@ class HybridAllocation implements StrategyInterface
             $weight = floatval($target['weight'] ?? 1);
             if ($weight < 0.01) $weight = 1;
 
-            $combinedScore = $priorityMult * $weight;
+            $users = intval($target['user_count'] ?? 1);
+            if ($users < 1) $users = 1;
+
+            $combinedScore = $priorityMult * $weight * $users;
             $scores[$index] = $combinedScore;
             $totalScore += $combinedScore;
         }
@@ -74,6 +77,9 @@ class HybridAllocation implements StrategyInterface
             }
             if (!isset($target['weight']) || !is_numeric($target['weight']) || floatval($target['weight']) <= 0) {
                 return 'Weight must be a positive number for target: ' . ($target['name'] ?? 'Unnamed');
+            }
+            if (!isset($target['user_count']) || !is_numeric($target['user_count']) || intval($target['user_count']) < 1) {
+                return 'User count must be a positive integer (at least 1) for target: ' . ($target['name'] ?? 'Unnamed');
             }
             $priority = strtolower($target['priority'] ?? '');
             if (!array_key_exists($priority, $this->priorityWeights)) {
@@ -121,13 +127,22 @@ class HybridAllocation implements StrategyInterface
                 'min' => 1,
                 'step' => 1,
                 'placeholder' => 'Weight value'
+            ],
+            [
+                'name' => 'user_count',
+                'type' => 'number',
+                'label' => 'User Count',
+                'default' => 10,
+                'min' => 1,
+                'step' => 1,
+                'placeholder' => 'Number of users'
             ]
         ];
     }
 
     public function getDescription(): string
     {
-        return 'Strategi Hybrid Allocation membagikan jaminan minimum alokasi terlebih dahulu. Jika terdapat sisa bandwidth, sisa tersebut dibagikan secara proporsional berdasarkan kombinasi skor Prioritas dan Bobot (Weight).';
+        return 'Strategi Hybrid Allocation membagikan jaminan minimum alokasi terlebih dahulu. Jika terdapat sisa bandwidth, sisa tersebut dibagikan secara proporsional berdasarkan kombinasi skor Prioritas, Bobot (Weight), dan Jumlah Pengguna (User Count).';
     }
 
     public function getInstruction(): array
@@ -136,8 +151,9 @@ class HybridAllocation implements StrategyInterface
             'Masukkan kapasitas total bandwidth yang tersedia.',
             'Isi Minimum Allocation untuk jaminan awal (bisa diisi 0 jika tidak butuh jaminan).',
             'Pilih tingkat Prioritas untuk menentukan pengali skor (Critical x4, Low x1).',
-            'Isi nilai Bobot (Weight) untuk perhitungan perbandingan antar target.',
-            'Skor total setiap target adalah hasil perkalian (Prioritas x Bobot).',
+            'Isi nilai Bobot (Weight) untuk perhitungan perbandingan proporsi.',
+            'Isi perkiraan jumlah pengguna (User Count) di area target.',
+            'Skor total setiap target dihitung berdasarkan perkalian (Prioritas x Bobot x Jumlah Pengguna).',
             'Tekan "Calculate" untuk melihat hasil kalkulasi kombinasi.'
         ];
     }
