@@ -409,6 +409,16 @@
             resultsPlaceholder.classList.remove('d-none');
         }
 
+        function escapeHTML(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         function renderResults(data) {
             resultsPlaceholder.classList.add('d-none');
             resultsPanel.classList.remove('d-none');
@@ -434,8 +444,8 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                 <td>
-                    <div class="fw-semibold text-dark">${item.name}</div>
-                    <small class="text-muted">${item.details || ''}</small>
+                    <div class="fw-semibold text-dark">${escapeHTML(item.name)}</div>
+                    <small class="text-muted">${escapeHTML(item.details || '')}</small>
                 </td>
                 <td class="text-end fw-bold text-primary">${item.allocated} ${data.unit}</td>
                 <td class="text-end">${percentage}%</td>
