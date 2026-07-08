@@ -2,8 +2,16 @@
 
 namespace App\Services\Allocation;
 
+/**
+ * Class HybridAllocation
+ * Strategi pembagian bandwidth tingkat lanjut yang menggabungkan Jaminan Minimum, Prioritas, 
+ * Bobot (Weight), dan Jumlah Pengguna (User Count).
+ */
 class HybridAllocation implements StrategyInterface
 {
+    /**
+     * Bobot multiplier untuk masing-masing tingkatan prioritas.
+     */
     private array $priorityWeights = [
         'critical' => 4,
         'high'     => 3,
@@ -11,17 +19,28 @@ class HybridAllocation implements StrategyInterface
         'low'      => 1,
     ];
 
+    /**
+     * Menghitung alokasi bandwidth dengan formula hibrida.
+     * Alur Kalkulasi:
+     * 1. Alokasikan jaminan minimum (min_alloc) untuk setiap target.
+     * 2. Hitung sisa bandwidth yang belum teralokasi (Total Bandwidth - Total Min).
+     * 3. Jika ada sisa, bagikan secara proporsional menggunakan Combined Score:
+     *    Combined Score = Prioritas Multiplier x Weight x User Count
+     */
     public function calculate(float $totalBandwidth, array $targets): array
     {
+        // Langkah 1: Kumpulkan seluruh jaminan minimum
         $totalMin = 0;
         foreach ($targets as $target) {
             $totalMin += floatval($target['min_alloc'] ?? 0);
         }
 
+        // Langkah 2: Hitung sisa kapasitas bandwidth
         $remaining = $totalBandwidth - $totalMin;
         $totalScore = 0;
         $scores = [];
         
+        // Langkah 3: Hitung Combined Score untuk pembagian sisa bandwidth secara adil
         foreach ($targets as $index => $target) {
             $priority = strtolower($target['priority'] ?? 'medium');
             $priorityMult = $this->priorityWeights[$priority] ?? 2;
@@ -32,11 +51,13 @@ class HybridAllocation implements StrategyInterface
             $users = intval($target['user_count'] ?? 1);
             if ($users < 1) $users = 1;
 
+            // Rumus Combined Score
             $combinedScore = $priorityMult * $weight * $users;
             $scores[$index] = $combinedScore;
             $totalScore += $combinedScore;
         }
 
+        // Langkah 4: Distribusikan hasil akhir (Jaminan Minimum + Porsi dari Sisa Bandwidth)
         $result = [];
         foreach ($targets as $index => $target) {
             $min = floatval($target['min_alloc'] ?? 0);
@@ -44,6 +65,7 @@ class HybridAllocation implements StrategyInterface
             
             $extraShare = 0;
             if ($totalScore > 0 && $remaining > 0) {
+                // Sisa bandwidth dibagi proporsional terhadap kontribusi skor masing-masing target
                 $extraShare = $remaining * ($score / $totalScore);
             }
 
@@ -58,6 +80,9 @@ class HybridAllocation implements StrategyInterface
         return $result;
     }
 
+    /**
+     * Memvalidasi input parameter untuk strategi Hybrid.
+     */
     public function validate(float $totalBandwidth, array $targets): ?string
     {
         if ($totalBandwidth <= 0) {
@@ -89,12 +114,16 @@ class HybridAllocation implements StrategyInterface
             $totalMin += floatval($target['min_alloc']);
         }
 
+        // Jaminan minimum tidak boleh melebihi kapasitas fisik link internet
         if ($totalMin > $totalBandwidth) {
             return 'Total guaranteed minimum (' . $totalMin . ') exceeds total bandwidth available (' . $totalBandwidth . ').';
         }
         return null;
     }
 
+    /**
+     * Mendefinisikan kolom parameter input yang akan dirender secara dinamis di form frontend.
+     */
     public function getFields(): array
     {
         return [

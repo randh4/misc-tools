@@ -1,69 +1,66 @@
-# CodeIgniter 4 Application Starter
+# Network Tools Platform - Bandwidth Planner
 
-## What is CodeIgniter?
+Aplikasi kalkulator berbasis web untuk melakukan perencanaan alokasi kapasitas bandwidth jaringan menggunakan berbagai macam strategi alokasi secara dinamis. Proyek ini dibangun menggunakan framework **CodeIgniter 4**, **Bootstrap 5 (Sneat Template)**, **Vanilla JS**, dan **Chart.js**.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## Fitur Utama
+Aplikasi ini menyediakan 6 strategi pembagian bandwidth:
+1. **Equal Share**: Membagi rata total bandwidth kepada seluruh target.
+2. **Weighted Allocation**: Membagi bandwidth secara proporsional berdasarkan bobot yang ditentukan.
+3. **Priority Allocation**: Membagi bandwidth secara proporsional berdasarkan level prioritas (Critical, High, Medium, Low).
+4. **Minimum Guarantee**: Menjamin alokasi minimum untuk masing-masing target, lalu membagi sisa bandwidth secara merata.
+5. **User-Based Allocation**: Membagi bandwidth secara proporsional berdasarkan estimasi jumlah pengguna (User Count) di setiap area target.
+6. **Hybrid Allocation**: Menggabungkan seluruh variabel (Minimum Guarantee, Prioritas, Bobot, dan Jumlah Pengguna) untuk menghitung distribusi bandwidth secara canggih.
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+---
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## Prasyarat System (Prerequisites)
+Pastikan komputer Anda sudah terinstal perangkat lunak berikut:
+- **PHP**: Versi 8.1 atau yang lebih baru (pastikan ekstensi `intl`, `mbstring`, dan `curl` aktif).
+- **Composer**: Dependency manager untuk PHP.
+- **Git** (Opsional, untuk kloning repositori).
+- Browser modern (Chrome, Firefox, Safari, Edge).
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+---
 
-## Installation & updates
+## Panduan Instalasi (Langkah demi Langkah)
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+### 1. Kloning Repositori
+Buka terminal (Command Prompt/Git Bash) lalu jalankan perintah berikut:
+```bash
+git clone https://github.com/randh4/misc-tools.git
+cd misc-tools
+```
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+### 2. Instalasi Dependensi
+Jalankan Composer untuk mengunduh framework dan dependensi library yang dibutuhkan:
+```bash
+composer install
+```
 
-## Setup
+### 3. Konfigurasi Environment
+Salin file konfigurasi env bawaan menjadi `.env`:
+```bash
+cp env .env
+```
+Buka file `.env` menggunakan teks editor (Notepad, VS Code, dll.), cari baris `CI_ENVIRONMENT` dan ubah menjadi `development` agar pesan error terlihat jelas jika ada masalah:
+```env
+CI_ENVIRONMENT = development
+```
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+### 4. Menjalankan Aplikasi
+CodeIgniter 4 menyediakan web server bawaan untuk kemudahan pengembangan. Jalankan perintah ini:
+```bash
+php spark serve
+```
+Secara default, server lokal akan berjalan di alamat `http://localhost:8080`.
 
-## Important Change with index.php
+### 5. Akses Aplikasi
+Buka web browser Anda, lalu kunjungi URL berikut:
+- Aplikasi Bandwidth Planner: [http://localhost:8080/planner](http://localhost:8080/planner)
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+---
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
-
-**Please** read the user guide for a better explanation of how CI4 works!
-
-## Repository Management
-
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
-
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
-
-## Server Requirements
-
-PHP version 8.2 or higher is required, with the following extensions installed:
-
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
-
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - The end of life date for PHP 8.1 was December 31, 2025.
-> - If you are still using below PHP 8.2, you should upgrade immediately.
-> - The end of life date for PHP 8.2 will be December 31, 2026.
-
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+## Struktur Proyek Utama
+- `app/Controllers/BandwidthPlanner.php` - Controller utama yang mengatur request API kalkulasi.
+- `app/Services/Allocation/` - Folder yang berisi file class algoritma strategi alokasi bandwidth.
+- `app/Views/planner/index.php` - Halaman tampilan utama aplikasi (Frontend).

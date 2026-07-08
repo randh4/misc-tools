@@ -126,6 +126,6 @@ _modules/*
 /phpunit.xml
 
 # misc
-.tokensave
+.tokensave/
 PROMPT.md
 project-planning.md
