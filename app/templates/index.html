@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ul class="nav nav-pills mb-4" id="toolTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="network-tab" data-bs-toggle="pill" data-bs-target="#tab-network" type="button" role="tab">Network & IP</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="crypto-tab" data-bs-toggle="pill" data-bs-target="#tab-crypto" type="button" role="tab">Crypto & Encoding</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="generators-tab" data-bs-toggle="pill" data-bs-target="#tab-generators" type="button" role="tab">Generators</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="infra-tab" data-bs-toggle="pill" data-bs-target="#tab-infra" type="button" role="tab">Infra & DevOps</button>
+  </li>
+</ul>
+
+<div class="tab-content" id="toolTabsContent">
+  <div class="tab-pane fade show active" id="tab-network" role="tabpanel">
+    {% include "tools/network.html" %}
+  </div>
+  <div class="tab-pane fade" id="tab-crypto" role="tabpanel">
+    {% include "tools/crypto.html" %}
+  </div>
+  <div class="tab-pane fade" id="tab-generators" role="tabpanel">
+    {% include "tools/generators.html" %}
+  </div>
+  <div class="tab-pane fade" id="tab-infra" role="tabpanel">
+    {% include "tools/infra.html" %}
+  </div>
+</div>
+{% endblock %}

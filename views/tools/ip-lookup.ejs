@@ -1,0 +1,25 @@
+<div class="space-y-4">
+  <div class="flex space-x-2">
+    <input type="text" id="input-ip-target" class="flex-1 p-2 border border-slate-300 rounded text-xs font-mono" placeholder="Masukkan IP Publik (e.g. 8.8.8.8) atau kosongkan untuk My IP">
+    <button data-action="lookup" class="px-4 py-2 bg-slate-900 text-white rounded text-xs font-bold hover:bg-slate-800">Lookup IP</button>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 text-xs">
+    <div class="p-3 bg-slate-50 border rounded">
+      <span class="text-slate-500 block">IP Query</span>
+      <span id="out-ip-addr" class="font-bold">-</span>
+    </div>
+    <div class="p-3 bg-slate-50 border rounded">
+      <span class="text-slate-500 block">Country</span>
+      <span id="out-ip-country" class="font-bold">-</span>
+    </div>
+    <div class="p-3 bg-slate-50 border rounded">
+      <span class="text-slate-500 block">City / Region</span>
+      <span id="out-ip-city" class="font-bold">-</span>
+    </div>
+    <div class="p-3 bg-slate-50 border rounded">
+      <span class="text-slate-500 block">ISP / ASN</span>
+      <span id="out-ip-isp" class="font-bold">-</span>
+    </div>
+  </div>
+</div>

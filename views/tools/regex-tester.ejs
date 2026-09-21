@@ -1,0 +1,22 @@
+<div class="space-y-4">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="md:col-span-3">
+      <label class="block text-xs font-bold text-slate-700 mb-1">Regular Expression Pattern</label>
+      <input type="text" id="input-regex-pattern" value="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" class="w-full p-2 border border-slate-300 rounded text-xs font-mono">
+    </div>
+    <div>
+      <label class="block text-xs font-bold text-slate-700 mb-1">Flags</label>
+      <input type="text" id="input-regex-flags" value="g" class="w-full p-2 border border-slate-300 rounded text-xs font-mono" placeholder="g, i, m">
+    </div>
+  </div>
+  <div>
+    <label class="block text-xs font-bold text-slate-700 mb-1">Test Text</label>
+    <textarea id="input-regex-text" rows="4" class="w-full p-2 border border-slate-300 rounded text-xs font-mono">Contact us at support@example.com or sales@company.co.id</textarea>
+  </div>
+  <button data-action="check" class="px-4 py-2 bg-slate-900 text-white rounded text-xs font-bold hover:bg-slate-800">Test Matches</button>
+
+  <div class="mt-4">
+    <label class="block text-xs font-bold text-slate-700 mb-1">Matched Results</label>
+    <pre id="out-regex-result" class="p-3 bg-slate-50 border border-slate-300 rounded text-xs font-mono min-h-[80px]">-</pre>
+  </div>
+</div>

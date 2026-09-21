@@ -1,0 +1,184 @@
+[
+  {
+    "id": "subnet-calc",
+    "name": "Subnet Calculator",
+    "desc": "CIDR and IPv4/IPv6 subnet calculation",
+    "category": "network",
+    "path": "/network/subnet-calc"
+  },
+  {
+    "id": "port-checker",
+    "name": "Port Checker",
+    "desc": "Test open TCP/UDP ports",
+    "category": "network",
+    "path": "/network/port-checker"
+  },
+  {
+    "id": "dns-lookup",
+    "name": "DNS Lookup",
+    "desc": "Query A, AAAA, MX, CNAME, TXT records",
+    "category": "network",
+    "path": "/network/dns-lookup"
+  },
+  {
+    "id": "whois-lookup",
+    "name": "WHOIS Lookup",
+    "desc": "Domain registration and ownership inspector",
+    "category": "network",
+    "path": "/network/whois"
+  },
+  {
+    "id": "http-headers",
+    "name": "HTTP Headers Inspector",
+    "desc": "Inspect HTTP response headers and status codes",
+    "category": "network",
+    "path": "/network/http-headers"
+  },
+  {
+    "id": "jwt-decoder",
+    "name": "JWT Decoder",
+    "desc": "Inspect, decode, and debug JWT tokens",
+    "category": "security",
+    "path": "/security/jwt-decoder"
+  },
+  {
+    "id": "hash-generator",
+    "name": "Hash Generator",
+    "desc": "Generate MD5, SHA-1, SHA-256, and SHA-512 hashes",
+    "category": "security",
+    "path": "/security/hash-generator"
+  },
+  {
+    "id": "password-strength",
+    "name": "Password Strength Analyzer",
+    "desc": "Entropy estimation and vulnerability check",
+    "category": "security",
+    "path": "/security/password-analyzer"
+  },
+  {
+    "id": "ssl-checker",
+    "name": "SSL/TLS Certificate Inspector",
+    "desc": "Verify certificate chain, expiry, and cipher suites",
+    "category": "security",
+    "path": "/security/ssl-checker"
+  },
+  {
+    "id": "cors-tester",
+    "name": "CORS Header Tester",
+    "desc": "Simulate and test Cross-Origin Resource Sharing configs",
+    "category": "security",
+    "path": "/security/cors-tester"
+  },
+  {
+    "id": "docker-compose-converter",
+    "name": "Docker Run to Compose",
+    "desc": "Convert CLI docker run commands to Compose YAML",
+    "category": "devops",
+    "path": "/devops/docker-run-to-compose"
+  },
+  {
+    "id": "cron-generator",
+    "name": "Cron Expression Generator",
+    "desc": "Build and parse cron schedule expressions",
+    "category": "devops",
+    "path": "/devops/cron-generator"
+  },
+  {
+    "id": "k8s-validator",
+    "name": "Kubernetes Manifest Validator",
+    "desc": "Validate YAML against Kubernetes schema",
+    "category": "devops",
+    "path": "/devops/k8s-validator"
+  },
+  {
+    "id": "nginx-config-gen",
+    "name": "Nginx Config Generator",
+    "desc": "Generate reverse proxy and SSL blocks",
+    "category": "devops",
+    "path": "/devops/nginx-generator"
+  },
+  {
+    "id": "dockerfile-linter",
+    "name": "Dockerfile Linter",
+    "desc": "Analyze Dockerfile for best practices and security",
+    "category": "devops",
+    "path": "/devops/dockerfile-linter"
+  },
+  {
+    "id": "base64-tool",
+    "name": "Base64 Encoder/Decoder",
+    "desc": "Encode and decode raw strings and binary data",
+    "category": "crypto-encoding",
+    "path": "/crypto/base64"
+  },
+  {
+    "id": "url-encoder",
+    "name": "URL Encoder/Decoder",
+    "desc": "Encode or decode query strings and special characters",
+    "category": "crypto-encoding",
+    "path": "/crypto/url-encode"
+  },
+  {
+    "id": "hex-converter",
+    "name": "Hex to String Converter",
+    "desc": "Bi-directional hexadecimal converter",
+    "category": "crypto-encoding",
+    "path": "/crypto/hex-converter"
+  },
+  {
+    "id": "aes-crypto",
+    "name": "AES Encrypt/Decrypt",
+    "desc": "Encrypt and decrypt text with AES-GCM / AES-CBC",
+    "category": "crypto-encoding",
+    "path": "/crypto/aes"
+  },
+  {
+    "id": "hmac-generator",
+    "name": "HMAC Generator",
+    "desc": "Compute keyed-hash message authentication code",
+    "category": "crypto-encoding",
+    "path": "/crypto/hmac"
+  },
+  {
+    "id": "json-yaml-converter",
+    "name": "JSON/YAML Converter",
+    "desc": "Bi-directional syntax formatter and converter",
+    "category": "formatter-converter",
+    "path": "/formatter/json-yaml"
+  },
+  {
+    "id": "sql-formatter",
+    "name": "SQL Formatter",
+    "desc": "Beautify and format complex SQL queries",
+    "category": "formatter-converter",
+    "path": "/formatter/sql"
+  },
+  {
+    "id": "xml-json-converter",
+    "name": "XML to JSON Converter",
+    "desc": "Parse XML data structures into clean JSON objects",
+    "category": "formatter-converter",
+    "path": "/formatter/xml-json"
+  },
+  {
+    "id": "markdown-preview",
+    "name": "Markdown to HTML Previewer",
+    "desc": "Real-time Markdown rendering and HTML output",
+    "category": "formatter-converter",
+    "path": "/formatter/markdown"
+  },
+  {
+    "id": "epoch-converter",
+    "name": "Timestamp Epoch Converter",
+    "desc": "Convert Unix epoch timestamps to human-readable dates",
+    "category": "formatter-converter",
+    "path": "/formatter/epoch"
+  },
+  {
+    "id": "csv-json-converter",
+    "name": "CSV to JSON Converter",
+    "desc": "Convert tabular CSV files into structured JSON",
+    "category": "formatter-converter",
+    "path": "/formatter/csv-json"
+  }
+]

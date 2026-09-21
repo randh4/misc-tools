@@ -1,0 +1,31 @@
+<div class="space-y-4">
+  <div>
+    <label class="block text-xs font-bold text-slate-700 mb-1">Input Text</label>
+    <textarea id="input-hash-text" rows="3" class="w-full p-2 border border-slate-300 rounded text-xs font-mono" placeholder="Ketik teks yang akan di-hash..."></textarea>
+  </div>
+  <button data-action="generate" class="px-4 py-2 bg-slate-900 text-white rounded text-xs font-bold hover:bg-slate-800">Compute Hashes</button>
+
+  <div class="space-y-3 mt-4">
+    <div>
+      <div class="flex justify-between text-xs mb-1">
+        <span class="font-bold">SHA-256</span>
+        <button data-action="copy" data-target="#out-sha256" class="text-slate-500 hover:text-slate-900">Copy</button>
+      </div>
+      <input type="text" id="out-sha256" readonly class="w-full p-2 bg-slate-50 border border-slate-300 rounded text-xs font-mono">
+    </div>
+    <div>
+      <div class="flex justify-between text-xs mb-1">
+        <span class="font-bold">SHA-512</span>
+        <button data-action="copy" data-target="#out-sha512" class="text-slate-500 hover:text-slate-900">Copy</button>
+      </div>
+      <input type="text" id="out-sha512" readonly class="w-full p-2 bg-slate-50 border border-slate-300 rounded text-xs font-mono">
+    </div>
+    <div>
+      <div class="flex justify-between text-xs mb-1">
+        <span class="font-bold">SHA-1</span>
+        <button data-action="copy" data-target="#out-sha1" class="text-slate-500 hover:text-slate-900">Copy</button>
+      </div>
+      <input type="text" id="out-sha1" readonly class="w-full p-2 bg-slate-50 border border-slate-300 rounded text-xs font-mono">
+    </div>
+  </div>
+</div>

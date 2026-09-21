@@ -1,0 +1,112 @@
+<div class="row g-4">
+  <!-- Subnet / CIDR -->
+  <div class="col-md-6" id="tool-cidr">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">Subnet / CIDR Calculator</div>
+      <div class="card-body">
+        <div class="input-group mb-2">
+          <input type="text" class="form-control mono" id="cidr-ip" placeholder="192.168.1.50">
+          <span class="input-group-text">/</span>
+          <input type="number" class="form-control mono" id="cidr-mask" placeholder="24" min="0" max="32" style="max-width: 80px;">
+          <button class="btn btn-primary" id="btn-calc-subnet">Calculate</button>
+        </div>
+        <pre class="bg-body-tertiary p-2 rounded small mono mb-0" id="cidr-res">Results will appear here...</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- IPv6 Formatter -->
+  <div class="col-md-6" id="tool-ipv6">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">IPv6 Expander & Compressor</div>
+      <div class="card-body">
+        <input type="text" class="form-control mono mb-2" id="ipv6-input" placeholder="2001:db8::1">
+        <div class="d-flex gap-2 mb-2">
+          <button class="btn btn-outline-primary btn-sm" id="btn-ipv6-expand">Expand</button>
+          <button class="btn btn-outline-secondary btn-sm" id="btn-ipv6-compress">Compress</button>
+        </div>
+        <input type="text" class="form-control mono" id="ipv6-res" readonly placeholder="Output">
+      </div>
+    </div>
+  </div>
+
+  <!-- DNS Lookup -->
+  <div class="col-md-6" id="tool-dns">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">DNS Record Lookup (Server Fallback)</div>
+      <div class="card-body">
+        <div class="input-group mb-2">
+          <input type="text" class="form-control mono" id="dns-domain" placeholder="google.com">
+          <select class="form-select mono" id="dns-type" style="max-width: 100px;">
+            <option value="A">A</option>
+            <option value="AAAA">AAAA</option>
+            <option value="MX">MX</option>
+            <option value="TXT">TXT</option>
+            <option value="NS">NS</option>
+            <option value="CNAME">CNAME</option>
+          </select>
+          <button class="btn btn-primary" id="btn-check-dns">Resolve</button>
+        </div>
+        <pre class="bg-body-tertiary p-2 rounded small mono mb-0" id="dns-res">Records...</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Port Checker -->
+  <div class="col-md-6" id="tool-port">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">TCP Port Checker (Server Fallback)</div>
+      <div class="card-body">
+        <div class="input-group mb-2">
+          <input type="text" class="form-control mono" id="port-host" placeholder="example.com">
+          <input type="number" class="form-control mono" id="port-val" placeholder="443" style="max-width: 90px;">
+          <button class="btn btn-primary" id="btn-check-port">Check</button>
+        </div>
+        <pre class="bg-body-tertiary p-2 rounded small mono mb-0" id="port-res">Status...</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- SSL Inspector -->
+  <div class="col-md-6" id="tool-ssl">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">SSL/TLS Certificate Inspector</div>
+      <div class="card-body">
+        <div class="input-group mb-2">
+          <input type="text" class="form-control mono" id="ssl-host" placeholder="github.com">
+          <input type="number" class="form-control mono" id="ssl-port" value="443" style="max-width: 90px;">
+          <button class="btn btn-primary" id="btn-check-ssl">Inspect</button>
+        </div>
+        <pre class="bg-body-tertiary p-2 rounded small mono mb-0" id="ssl-res">Certificate info...</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- HTTP Inspector -->
+  <div class="col-md-6" id="tool-http">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">HTTP Headers Inspector</div>
+      <div class="card-body">
+        <div class="input-group mb-2">
+          <input type="text" class="form-control mono" id="http-url" placeholder="https://httpbin.org/get">
+          <button class="btn btn-primary" id="btn-check-http">Inspect</button>
+        </div>
+        <pre class="bg-body-tertiary p-2 rounded small mono mb-0" id="http-res">Headers...</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- RDAP / WHOIS -->
+  <div class="col-md-12" id="tool-rdap">
+    <div class="card tool-card">
+      <div class="card-header fw-bold">WHOIS / RDAP Proxy</div>
+      <div class="card-body">
+        <div class="input-group mb-2">
+          <input type="text" class="form-control mono" id="rdap-query" placeholder="example.com">
+          <button class="btn btn-primary" id="btn-check-rdap">Query RDAP</button>
+        </div>
+        <pre class="bg-body-tertiary p-2 rounded small mono mb-0" id="rdap-res">RDAP JSON...</pre>
+      </div>
+    </div>
+  </div>
+</div>

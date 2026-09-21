@@ -1,0 +1,59 @@
+<div class="row g-4">
+  <!-- UUID -->
+  <div class="col-md-6" id="tool-uuid">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">UUID Generator</div>
+      <div class="card-body">
+        <div class="d-flex gap-2 mb-2">
+          <select class="form-select mono" id="uuid-ver" style="max-width: 120px;">
+            <option value="v4">UUID v4</option>
+            <option value="v7">UUID v7</option>
+          </select>
+          <button class="btn btn-primary btn-sm" id="btn-gen-uuid">Generate</button>
+        </div>
+        <input type="text" class="form-control mono" id="uuid-res" readonly placeholder="Generated UUID">
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Generator -->
+  <div class="col-md-6" id="tool-pass">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">Secure Password Generator</div>
+      <div class="card-body">
+        <div class="d-flex gap-2 mb-2">
+          <input type="number" class="form-control mono" id="pass-len" value="16" min="8" max="64" style="max-width: 100px;">
+          <button class="btn btn-primary btn-sm" id="btn-gen-pass">Generate</button>
+        </div>
+        <input type="text" class="form-control mono" id="pass-res" readonly placeholder="Generated password">
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Code Generator -->
+  <div class="col-md-6" id="tool-qr">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">QR Code Generator (Client-Side)</div>
+      <div class="card-body">
+        <input type="text" class="form-control mono mb-2" id="qr-input" placeholder="Text or URL...">
+        <div class="text-center p-2 bg-body-tertiary rounded">
+          <canvas id="qr-canvas" width="180" height="180"></canvas>
+        </div>
+        <div class="text-danger small mt-1" id="qr-error"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WireGuard Config Generator -->
+  <div class="col-md-6" id="tool-wireguard">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">WireGuard Client Config Generator</div>
+      <div class="card-body">
+        <input type="text" class="form-control mono mb-2" id="wg-ip" placeholder="Client IP (e.g. 10.0.0.2/32)">
+        <input type="text" class="form-control mono mb-2" id="wg-endpoint" placeholder="Server Endpoint (e.g. 203.0.113.1:51820)">
+        <button class="btn btn-primary btn-sm mb-2" id="btn-wg-gen">Generate Config</button>
+        <textarea class="form-control mono small" id="wg-res" rows="4" readonly placeholder="[Interface]..."></textarea>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<%- include('../partials/header') %>
+
+<main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
+  <div class="flex items-center justify-between">
+    <a href="/" class="text-xs text-slate-600 hover:text-slate-900 font-semibold flex items-center gap-1">
+      &larr; Kembali ke Index Workbench
+    </a>
+  </div>
+
+  <!-- Session Context Bar -->
+  <div id="session-context-bar" class="hidden p-3 bg-slate-900 text-slate-300 rounded-lg border border-slate-800 text-xs flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-2">
+      <span class="font-bold text-emerald-400">Current Context:</span>
+      <span id="ctx-display" class="font-mono text-slate-200"></span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="btn-use-ctx" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[11px] font-bold transition-all">
+        Use Current Context
+      </button>
+      <button id="btn-clear-ctx" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded text-[11px] transition-all">
+        Clear Context
+      </button>
+    </div>
+  </div>
+
+  <!-- Tool Header -->
+  <header class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center space-x-3">
+          <h1 class="text-xl font-bold text-slate-900"><%= tool.name %></h1>
+          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200"><%= tool.category %></span>
+        </div>
+        <p class="text-xs text-slate-600 mt-2 leading-relaxed"><%= tool.desc %></p>
+      </div>
+      <div>
+        <%- include('../partials/privacy-badge', { privacy: tool.privacy }) %>
+      </div>
+    </div>
+    <div class="mt-4 p-3 bg-slate-50 border border-slate-200 rounded text-xs text-slate-700">
+      <strong class="text-slate-900">Cara Kerja / Usage:</strong> <%= tool.usage %>
+    </div>
+  </header>
+
+  <!-- Main Tool Workspace -->
+  <section id="tool-container" data-tool="<%= tool.slug %>" class="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
+    <%- include(`../tools/${tool.template}`) %>
+  </section>
+
+  <!-- Status Message Toast Container -->
+  <div id="status-message" class="hidden p-3 rounded-lg text-xs transition-all" role="alert"></div>
+
+  <!-- Related Tools / Next Actions Section -->
+  <section class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm space-y-3">
+    <h3 class="text-xs font-bold text-slate-800 tracking-wider uppercase">Next Actions &amp; Related Tools</h3>
+    <div class="flex flex-wrap gap-2" id="related-tools-container">
+      <a href="/tools/dns-lookup" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded text-xs font-semibold transition-all">
+        → DNS Lookup
+      </a>
+      <a href="/tools/ping-test" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded text-xs font-semibold transition-all">
+        → ICMP / TCP Ping
+      </a>
+      <a href="/tools/port-checker" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded text-xs font-semibold transition-all">
+        → Port Open Checker
+      </a>
+      <a href="/tools/ssl-checker" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded text-xs font-semibold transition-all">
+        → SSL/TLS Checker
+      </a>
+      <a href="/tools/ip-lookup" class="px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded text-xs font-semibold transition-all">
+        → GeoIP / ASN Lookup
+      </a>
+    </div>
+  </section>
+</main>
+
+<%- include('../partials/footer') %>

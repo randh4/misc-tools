@@ -1,0 +1,34 @@
+<div class="space-y-4">
+  <div class="grid grid-cols-3 gap-4 text-xs">
+    <div class="p-3 bg-slate-50 border rounded space-y-2">
+      <strong class="block text-slate-800">Owner (User)</strong>
+      <label class="block"><input type="checkbox" id="chk-u-r" checked class="chmod-box mr-1"> Read (4)</label>
+      <label class="block"><input type="checkbox" id="chk-u-w" checked class="chmod-box mr-1"> Write (2)</label>
+      <label class="block"><input type="checkbox" id="chk-u-x" checked class="chmod-box mr-1"> Execute (1)</label>
+    </div>
+    <div class="p-3 bg-slate-50 border rounded space-y-2">
+      <strong class="block text-slate-800">Group</strong>
+      <label class="block"><input type="checkbox" id="chk-g-r" checked class="chmod-box mr-1"> Read (4)</label>
+      <label class="block"><input type="checkbox" id="chk-g-w" class="chmod-box mr-1"> Write (2)</label>
+      <label class="block"><input type="checkbox" id="chk-g-x" checked class="chmod-box mr-1"> Execute (1)</label>
+    </div>
+    <div class="p-3 bg-slate-50 border rounded space-y-2">
+      <strong class="block text-slate-800">Public (Others)</strong>
+      <label class="block"><input type="checkbox" id="chk-o-r" checked class="chmod-box mr-1"> Read (4)</label>
+      <label class="block"><input type="checkbox" id="chk-o-w" class="chmod-box mr-1"> Write (2)</label>
+      <label class="block"><input type="checkbox" id="chk-o-x" checked class="chmod-box mr-1"> Execute (1)</label>
+    </div>
+  </div>
+  <button data-action="calculate" class="px-4 py-2 bg-slate-900 text-white rounded text-xs font-bold hover:bg-slate-800">Compute Chmod</button>
+
+  <div class="grid grid-cols-2 gap-4 mt-4 text-xs">
+    <div class="p-3 bg-slate-50 border rounded">
+      <span class="text-slate-500 block">Octal Notation</span>
+      <span id="out-chmod-octal" class="text-base font-bold text-slate-900">755</span>
+    </div>
+    <div class="p-3 bg-slate-50 border rounded">
+      <span class="text-slate-500 block">Symbolic Notation</span>
+      <span id="out-chmod-symbolic" class="text-base font-bold text-slate-900">-rwxr-xr-x</span>
+    </div>
+  </div>
+</div>

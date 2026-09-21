@@ -1,0 +1,101 @@
+<div class="row g-4">
+  <!-- Hash Generator -->
+  <div class="col-md-6" id="tool-hash">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">Hash Generator (Web Crypto API)</div>
+      <div class="card-body">
+        <textarea class="form-control mono mb-2" id="hash-input" rows="2" placeholder="Text to hash..."></textarea>
+        <div class="d-flex gap-2 mb-2">
+          <select class="form-select mono" id="hash-algo" style="max-width: 140px;">
+            <option value="SHA-256">SHA-256</option>
+            <option value="SHA-512">SHA-512</option>
+            <option value="SHA-1">SHA-1</option>
+          </select>
+          <button class="btn btn-primary btn-sm" id="btn-calc-hash">Generate</button>
+        </div>
+        <input type="text" class="form-control mono" id="hash-res" readonly placeholder="Hash output">
+      </div>
+    </div>
+  </div>
+
+  <!-- HMAC Generator -->
+  <div class="col-md-6" id="tool-hmac">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">HMAC Generator</div>
+      <div class="card-body">
+        <textarea class="form-control mono mb-2" id="hmac-input" rows="2" placeholder="Data..."></textarea>
+        <input type="text" class="form-control mono mb-2" id="hmac-secret" placeholder="Secret Key">
+        <div class="d-flex gap-2 mb-2">
+          <select class="form-select mono" id="hmac-algo" style="max-width: 140px;">
+            <option value="SHA-256">SHA-256</option>
+            <option value="SHA-512">SHA-512</option>
+          </select>
+          <button class="btn btn-primary btn-sm" id="btn-calc-hmac">Sign HMAC</button>
+        </div>
+        <input type="text" class="form-control mono" id="hmac-res" readonly placeholder="HMAC output">
+      </div>
+    </div>
+  </div>
+
+  <!-- Base64 / Hex / Base32 -->
+  <div class="col-md-6" id="tool-base64">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">Base64 / Hex / Base32 Codec</div>
+      <div class="card-body">
+        <textarea class="form-control mono mb-2" id="codec-input" rows="2" placeholder="Input text..."></textarea>
+        <div class="d-flex gap-2 mb-2">
+          <select class="form-select mono" id="codec-format" style="max-width: 120px;">
+            <option value="base64">Base64</option>
+            <option value="hex">Hex</option>
+            <option value="base32">Base32</option>
+          </select>
+          <button class="btn btn-outline-primary btn-sm" id="btn-codec-enc">Encode</button>
+          <button class="btn btn-outline-secondary btn-sm" id="btn-codec-dec">Decode</button>
+        </div>
+        <textarea class="form-control mono" id="codec-res" rows="2" readonly placeholder="Result"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- URL Codec -->
+  <div class="col-md-6" id="tool-url">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">URL Encoder / Decoder</div>
+      <div class="card-body">
+        <textarea class="form-control mono mb-2" id="url-input" rows="2" placeholder="https://example.com?query=hello world"></textarea>
+        <div class="d-flex gap-2 mb-2">
+          <button class="btn btn-outline-primary btn-sm" id="btn-url-enc">Encode</button>
+          <button class="btn btn-outline-secondary btn-sm" id="btn-url-dec">Decode</button>
+        </div>
+        <textarea class="form-control mono" id="url-res" rows="2" readonly placeholder="Result"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- HTML Entities -->
+  <div class="col-md-6" id="tool-html">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">HTML Entity Encoder / Decoder</div>
+      <div class="card-body">
+        <textarea class="form-control mono mb-2" id="html-input" rows="2" placeholder="<div>'Hello' & welcome</div>"></textarea>
+        <div class="d-flex gap-2 mb-2">
+          <button class="btn btn-outline-primary btn-sm" id="btn-html-enc">Encode</button>
+          <button class="btn btn-outline-secondary btn-sm" id="btn-html-dec">Decode</button>
+        </div>
+        <textarea class="form-control mono" id="html-res" rows="2" readonly placeholder="Result"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- JWT Decoder -->
+  <div class="col-md-6" id="tool-jwt">
+    <div class="card h-100 tool-card">
+      <div class="card-header fw-bold">JWT Decoder (Client-Side)</div>
+      <div class="card-body">
+        <textarea class="form-control mono mb-2" id="jwt-input" rows="2" placeholder="eyJhbGciOi..."></textarea>
+        <button class="btn btn-primary btn-sm mb-2" id="btn-jwt-decode">Decode JWT</button>
+        <pre class="bg-body-tertiary p-2 rounded small mono mb-0" id="jwt-res">Payload will appear here...</pre>
+      </div>
+    </div>
+  </div>
+</div>

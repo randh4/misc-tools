@@ -1,0 +1,9 @@
+<% if (privacy === 'client') { %>
+  <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-emerald-950 text-emerald-300 border border-emerald-700" title="Diproses 100% di browser. Data tidak dikirim ke server.">
+    <span class="w-2 h-2 mr-1.5 bg-emerald-400 rounded-full animate-pulse"></span> Client-side (Lokal/Aman)
+  </span>
+<% } else { %>
+  <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-amber-950 text-amber-300 border border-amber-700" title="Memerlukan proxy server untuk eksekusi socket/DNS/network request.">
+    <span class="w-2 h-2 mr-1.5 bg-amber-400 rounded-full animate-pulse"></span> Server-side Proxy
+  </span>
+<% } %>

@@ -1,0 +1,28 @@
+<div class="space-y-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-xs font-bold text-slate-700 mb-1">Epoch Timestamp (Seconds atau Milliseconds)</label>
+      <input type="text" id="input-epoch" class="w-full p-2 border border-slate-300 rounded text-xs font-mono" placeholder="e.g. 1700000000">
+    </div>
+    <div>
+      <label class="block text-xs font-bold text-slate-700 mb-1">ISO 8601 Date String</label>
+      <input type="text" id="input-iso" class="w-full p-2 border border-slate-300 rounded text-xs font-mono" placeholder="YYYY-MM-DDTHH:mm:ssZ">
+    </div>
+  </div>
+  <button data-action="convert" class="px-4 py-2 bg-slate-900 text-white rounded text-xs font-bold hover:bg-slate-800">Convert Timestamp</button>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 text-xs">
+    <div class="p-3 bg-slate-50 border rounded">
+      <span class="text-slate-500 block">Epoch Seconds</span>
+      <span id="out-time-sec" class="font-bold">-</span>
+    </div>
+    <div class="p-3 bg-slate-50 border rounded">
+      <span class="text-slate-500 block">UTC Time</span>
+      <span id="out-time-utc" class="font-bold">-</span>
+    </div>
+    <div class="p-3 bg-slate-50 border rounded">
+      <span class="text-slate-500 block">Local Time</span>
+      <span id="out-time-local" class="font-bold">-</span>
+    </div>
+  </div>
+</div>

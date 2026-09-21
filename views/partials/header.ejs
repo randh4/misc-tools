@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="icon" href="/images/logo.png" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col font-mono">
+  <nav class="bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="/" class="flex items-center space-x-2 text-emerald-400 font-bold tracking-wider hover:opacity-90 transition-opacity">
+        <span class="text-xl font-mono font-bold">&gt;_</span>
+        <span>IT_TOOLBOX</span>
+      </a>
+      <div class="flex items-center space-x-3 text-xs">
+        <button id="cmd-palette-btn" onclick="document.getElementById('search-input')?.focus()" class="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition-all">
+          <span>🔍 Search</span>
+          <kbd class="px-1.5 py-0.5 text-[10px] bg-slate-900 rounded text-slate-400 font-sans border border-slate-700">Ctrl + K</kbd>
+        </button>
+        <a href="/" class="hover:text-emerald-400 font-semibold">INDEX</a>
+        <a href="https://github.com" target="_blank" rel="noopener" class="text-slate-400 hover:text-white">v1.1.0</a>
+      </div>
+    </div>
+  </nav>

@@ -1,0 +1,13 @@
+<div class="space-y-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-xs font-bold text-slate-700 mb-1">Markdown Source</label>
+      <textarea id="input-markdown" rows="12" class="w-full p-2 border border-slate-300 rounded text-xs font-mono" placeholder="# Title&#10;&#10;- Item 1&#10;- Item 2&#10;&#10;**Bold text** and `code`"></textarea>
+    </div>
+    <div>
+      <label class="block text-xs font-bold text-slate-700 mb-1">Live Rendered HTML</label>
+      <div id="out-markdown-html" class="w-full h-64 p-3 bg-slate-50 border border-slate-300 rounded text-xs overflow-y-auto prose"></div>
+    </div>
+  </div>
+  <button data-action="render" class="px-4 py-2 bg-slate-900 text-white rounded text-xs font-bold hover:bg-slate-800">Render Markdown</button>
+</div>

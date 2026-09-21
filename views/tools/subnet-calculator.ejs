@@ -1,0 +1,35 @@
+<div class="space-y-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-xs font-bold text-slate-700 mb-1">IPv4 Address</label>
+      <input type="text" id="input-ip" value="192.168.1.1" class="w-full p-2 border border-slate-300 rounded text-xs" placeholder="e.g. 192.168.1.1">
+    </div>
+    <div>
+      <label class="block text-xs font-bold text-slate-700 mb-1">CIDR Subnet Mask (/0 - /32)</label>
+      <input type="number" id="input-cidr" value="24" min="0" max="32" class="w-full p-2 border border-slate-300 rounded text-xs" placeholder="24">
+    </div>
+  </div>
+  <button data-action="calculate" class="px-4 py-2 bg-slate-900 text-white rounded text-xs font-bold hover:bg-slate-800">Calculate Subnet</button>
+
+  <div class="mt-6 border-t border-slate-200 pt-4">
+    <h3 class="text-xs font-bold text-slate-700 mb-3">Hasil Kalkulasi:</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+      <div class="p-3 bg-slate-50 border rounded">
+        <span class="text-slate-500 block">Network Address</span>
+        <span id="out-network" class="font-bold">-</span>
+      </div>
+      <div class="p-3 bg-slate-50 border rounded">
+        <span class="text-slate-500 block">Broadcast Address</span>
+        <span id="out-broadcast" class="font-bold">-</span>
+      </div>
+      <div class="p-3 bg-slate-50 border rounded">
+        <span class="text-slate-500 block">Subnet Mask</span>
+        <span id="out-netmask" class="font-bold">-</span>
+      </div>
+      <div class="p-3 bg-slate-50 border rounded">
+        <span class="text-slate-500 block">Usable Hosts</span>
+        <span id="out-hosts" class="font-bold">-</span>
+      </div>
+    </div>
+  </div>
+</div>

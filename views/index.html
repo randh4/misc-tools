@@ -1,0 +1,168 @@
+<!-- # filepath: views/index.html -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IT Engineer Toolbox</title>
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>IT Engineer Toolbox</h1>
+      <p class="subtitle">Katalog utilitas harian untuk Network, Security, DevOps, Cryptography, dan Formatters.</p>
+    </header>
+
+    <nav class="category-pills" role="tablist" aria-label="Tool Categories">
+      <button class="pill active" role="tab" aria-selected="true" data-filter="all">All</button>
+      <button class="pill" role="tab" aria-selected="false" data-filter="network">Network</button>
+      <button class="pill" role="tab" aria-selected="false" data-filter="security">Security</button>
+      <button class="pill" role="tab" aria-selected="false" data-filter="devops">DevOps</button>
+      <button class="pill" role="tab" aria-selected="false" data-filter="crypto-encoding">Crypto &amp; Encoding</button>
+      <button class="pill" role="tab" aria-selected="false" data-filter="formatter-converter">Formatter &amp; Converter</button>
+    </nav>
+
+    <main>
+      <section id="tools-grid" class="tools-grid">
+        <article class="tool-card" data-category="network">
+          <h3>Subnet Calculator</h3>
+          <p>CIDR and IPv4/IPv6 subnet calculation</p>
+          <a href="/network/subnet-calc">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="network">
+          <h3>Port Checker</h3>
+          <p>Test open TCP/UDP ports</p>
+          <a href="/network/port-checker">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="network">
+          <h3>DNS Lookup</h3>
+          <p>Query A, AAAA, MX, CNAME, TXT records</p>
+          <a href="/network/dns-lookup">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="network">
+          <h3>WHOIS Lookup</h3>
+          <p>Domain registration and ownership inspector</p>
+          <a href="/network/whois">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="network">
+          <h3>HTTP Headers Inspector</h3>
+          <p>Inspect HTTP response headers and status codes</p>
+          <a href="/network/http-headers">Open &rarr;</a>
+        </article>
+
+        <article class="tool-card" data-category="security">
+          <h3>JWT Decoder</h3>
+          <p>Inspect, decode, and debug JWT tokens</p>
+          <a href="/security/jwt-decoder">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="security">
+          <h3>Hash Generator</h3>
+          <p>Generate MD5, SHA-1, SHA-256, and SHA-512 hashes</p>
+          <a href="/security/hash-generator">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="security">
+          <h3>Password Strength Analyzer</h3>
+          <p>Entropy estimation and vulnerability check</p>
+          <a href="/security/password-analyzer">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="security">
+          <h3>SSL/TLS Certificate Inspector</h3>
+          <p>Verify certificate chain, expiry, and cipher suites</p>
+          <a href="/security/ssl-checker">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="security">
+          <h3>CORS Header Tester</h3>
+          <p>Simulate and test Cross-Origin Resource Sharing configs</p>
+          <a href="/security/cors-tester">Open &rarr;</a>
+        </article>
+
+        <article class="tool-card" data-category="devops">
+          <h3>Docker Run to Compose</h3>
+          <p>Convert CLI docker run commands to Compose YAML</p>
+          <a href="/devops/docker-run-to-compose">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="devops">
+          <h3>Cron Expression Generator</h3>
+          <p>Build and parse cron schedule expressions</p>
+          <a href="/devops/cron-generator">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="devops">
+          <h3>Kubernetes Manifest Validator</h3>
+          <p>Validate YAML against Kubernetes schema</p>
+          <a href="/devops/k8s-validator">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="devops">
+          <h3>Nginx Config Generator</h3>
+          <p>Generate reverse proxy and SSL blocks</p>
+          <a href="/devops/nginx-generator">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="devops">
+          <h3>Dockerfile Linter</h3>
+          <p>Analyze Dockerfile for best practices and security</p>
+          <a href="/devops/dockerfile-linter">Open &rarr;</a>
+        </article>
+
+        <article class="tool-card" data-category="crypto-encoding">
+          <h3>Base64 Encoder/Decoder</h3>
+          <p>Encode and decode raw strings and binary data</p>
+          <a href="/crypto/base64">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="crypto-encoding">
+          <h3>URL Encoder/Decoder</h3>
+          <p>Encode or decode query strings and special characters</p>
+          <a href="/crypto/url-encode">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="crypto-encoding">
+          <h3>Hex to String Converter</h3>
+          <p>Bi-directional hexadecimal converter</p>
+          <a href="/crypto/hex-converter">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="crypto-encoding">
+          <h3>AES Encrypt/Decrypt</h3>
+          <p>Encrypt and decrypt text with AES-GCM / AES-CBC</p>
+          <a href="/crypto/aes">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="crypto-encoding">
+          <h3>HMAC Generator</h3>
+          <p>Compute keyed-hash message authentication code</p>
+          <a href="/crypto/hmac">Open &rarr;</a>
+        </article>
+
+        <article class="tool-card" data-category="formatter-converter">
+          <h3>JSON/YAML Converter</h3>
+          <p>Bi-directional syntax formatter and converter</p>
+          <a href="/formatter/json-yaml">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="formatter-converter">
+          <h3>SQL Formatter</h3>
+          <p>Beautify and format complex SQL queries</p>
+          <a href="/formatter/sql">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="formatter-converter">
+          <h3>XML to JSON Converter</h3>
+          <p>Parse XML data structures into clean JSON objects</p>
+          <a href="/formatter/xml-json">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="formatter-converter">
+          <h3>Markdown to HTML Previewer</h3>
+          <p>Real-time Markdown rendering and HTML output</p>
+          <a href="/formatter/markdown">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="formatter-converter">
+          <h3>Timestamp Epoch Converter</h3>
+          <p>Convert Unix epoch timestamps to human-readable dates</p>
+          <a href="/formatter/epoch">Open &rarr;</a>
+        </article>
+        <article class="tool-card" data-category="formatter-converter">
+          <h3>CSV to JSON Converter</h3>
+          <p>Convert tabular CSV files into structured JSON</p>
+          <a href="/formatter/csv-json">Open &rarr;</a>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/filter.js"></script>
+</body>
+</html>
